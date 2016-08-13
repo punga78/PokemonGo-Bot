@@ -593,8 +593,16 @@ namespace PokemonGo.RocketAPI.Logic
                                 await RandomHelper.RandomDelay(50, 200);
                             } 
                         }
+                        
+                        var encounterpokemonIv = PokemonInfo.CalculatePokemonPerfection(encounterPokemonResponse?.WildPokemon?.PokemonData);
 
-                        caughtPokemonResponse = await _client.Encounter.CatchPokemon(pokemon.EncounterId, pokemon.SpawnPointId, bestPokeball);
+                        var normalizedRecticleSize = 1.95;
+                        var spinModifier = 1.0;
+                        bool hitPokemon = true;
+                        
+//                      if (encounterpokemonIv<90 || (probability.HasValue && probability.Value < 0.35) && _client.EnableHumandThrows) {}
+                        
+                        caughtPokemonResponse = await _client.Encounter.CatchPokemon(pokemon.EncounterId, pokemon.SpawnPointId, bestPokeball, normalizedRecticleSize, spinModifier, hitPokemon);
                         if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchMissed)
                         {
                             Logger.ColoredConsoleWrite(ConsoleColor.Magenta, $"Missed {StringUtils.getPokemonNameByLanguage(_clientSettings, pokemon.PokemonId)} while using {bestPokeball}");
